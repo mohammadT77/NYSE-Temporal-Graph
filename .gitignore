@@ -162,4 +162,4 @@ cython_debug/
 #.idea/
 
 
-graph_data/train/all_thr3
+graph_data/
