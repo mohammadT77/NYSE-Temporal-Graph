@@ -17,9 +17,9 @@ from matplotlib import pyplot as plt
 from tqdm import tqdm
 
 # %%
-SIMILARITY_THRESHOLD = 2
+SIMILARITY_THRESHOLD = 1
 TARGET_SECTORS = ['Real Estate', 'Information Technology', 'Materials', 'Telecommunications Services']
-DIR_NAME = 'rimt_thresh2'
+DIR_NAME = 'rimt_thresh1'
 
 # %% [markdown]
 # # Download Dataset
