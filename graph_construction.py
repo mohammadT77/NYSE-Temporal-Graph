@@ -16,6 +16,11 @@ import os
 from matplotlib import pyplot as plt
 from tqdm import tqdm
 
+# %%
+SIMILARITY_THRESHOLD = 2
+TARGET_SECTORS = ['Real Estate', 'Information Technology', 'Materials', 'Telecommunications Services']
+DIR_NAME = 'rimt_thresh2'
+
 # %% [markdown]
 # # Download Dataset
 
@@ -30,6 +35,11 @@ securities_pd = pd.read_csv(join_path(dataset_path, "securities.csv"))
 
 # %%
 all_symbols = prices_pd['symbol'].unique()
+
+def get_symbol_by_sector(sector):
+    return securities_pd[securities_pd['GICS Sector'] == sector]['Ticker symbol'].to_list()
+
+securities_pd.groupby('GICS Sector')['Ticker symbol'].count()
 
 # %%
 prices_pd['date'] = pd.to_datetime(prices_pd['date'], format='mixed').dt.date
@@ -103,23 +113,18 @@ def save_graph(prefix: str, dateIdx: int, date, graph: nx.Graph, base_dir='graph
     nx.write_weighted_edgelist(graph, file_path)
 
 # %%
-# def draw_graph(G: nx.Graph):
-    
-#     agraph = nx.nx_agraph.to_agraph(G)
-#     agraph.draw('G.png', prog='dot')
-    
-    
+target_symbols = []
+for sector in TARGET_SECTORS:
+    target_symbols += get_symbol_by_sector(sector)
 
-# %%
-energies = (securities_pd[securities_pd['GICS Sector'] == 'Energy']['Ticker symbol'].to_list())    
-# energies10_graphs = build_temporal_graphs(prices_pd[prices_pd['symbol'].isin(energies)])
-test_prices_df = prices_pd[prices_pd['date'] >= int_to_date(0)][prices_pd['date'] < int_to_date(int(len(dates)*0.7))]
+train_end_date_idx = int(len(dates)*0.7)
+test_prices_df = prices_pd[prices_pd['date'] >= int_to_date(0)][prices_pd['date'] < int_to_date(train_end_date_idx)]
 
-all_graphs = build_temporal_graphs(test_prices_df[test_prices_df['symbol'].isin(all_symbols)])
+target_graphs = build_temporal_graphs(test_prices_df[test_prices_df['symbol'].isin(target_symbols)])
 
-pbar = tqdm(range(len(dates)))
-for dateIdx, date, graph in all_graphs:
-    save_graph('all', dateIdx, date, graph)
+pbar = tqdm(range(train_end_date_idx))
+for dateIdx, date, graph in target_graphs:
+    save_graph(DIR_NAME, dateIdx, date, graph)
     pbar.update(1)
     
 
