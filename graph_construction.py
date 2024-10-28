@@ -70,13 +70,15 @@ def add_features(target_prices_df = prices_pd):
     # target_prices_df['close_3d'] = target_prices_df['close'].pct_change(3)
 
 
-def similarity_score(record1: pd.Series, record2: pd.Series, thresh = 3, norm_factor = 1e-5) -> float:
+def similarity_score(record1: pd.Series, record2: pd.Series) -> float:
+    norm_factor = 1e-5
+    
     if record1['symbol'] == record2['symbol']:
         return 0
     
     abs_diff = abs((record2['day_diff'])-(record1['day_diff'])) + norm_factor
     sim = -np.log(abs_diff)
-    if sim > thresh:
+    if sim > SIMILARITY_THRESHOLD:
         return np.round(sim, 3)
     else:
         return 0
