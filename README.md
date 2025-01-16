@@ -1,7 +1,3 @@
-Here’s a README file for your project:
-
----
-
 # NYSE Graph: Stock Price Prediction Using Graph Neural Networks
 
 This repository contains the implementation of a project focused on constructing graphs from NYSE stock data and predicting stock price changes using Graph Neural Networks (GNNs). The project integrates static and temporal graph construction with end-to-end learning for predictive modeling.
